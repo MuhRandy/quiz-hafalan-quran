@@ -1,19 +1,30 @@
-import { useState } from "react";
+import clsx from "clsx";
+// import { useState } from "react";
 
 type OptionProps = {
   text: string;
-  value: number;
+  handleClick: any;
+  icon?: string;
+  className: string;
+  //   value: number;
+  isDisabled: boolean;
 };
 
-const Option = ({ text, value }: OptionProps) => {
-  const [icon, setIcon] = useState("");
-
-  const handleClick = (value: number) => (value ? setIcon("✔") : setIcon("❌"));
-
+const Option = ({
+  text,
+  icon = "",
+  className,
+  isDisabled,
+  handleClick,
+}: OptionProps) => {
   return (
     <button
-      className="shadow-sm border rounded-md text-right p-2 flex justify-between"
-      onClick={() => handleClick(value)}
+      className={clsx(
+        "shadow-sm border rounded-md text-right p-2 flex justify-between",
+        className
+      )}
+      onClick={handleClick}
+      disabled={isDisabled}
     >
       <span>{icon}</span>
       <span className="font-quranic">{text}</span>

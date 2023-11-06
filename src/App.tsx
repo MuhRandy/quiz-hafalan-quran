@@ -2,10 +2,18 @@ import { useEffect, useState } from "react";
 import Card from "./components/Card";
 import { guessVerse } from "quran-quiz";
 import Option from "./components/Option";
+import clsx from "clsx";
 
 function App() {
   const [question, setQuestion] = useState<string[] | null[]>([]);
   const [options, setOptions] = useState<any[]>([]);
+  // const [icon, setIcon] = useState("");
+  // const [className, setClassName] = useState<string>("");
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [isOption1Clicked, setIsOption1Clicked] = useState(false);
+  const [isOption2Clicked, setIsOption2Clicked] = useState(false);
+  const [isOption3Clicked, setIsOption3Clicked] = useState(false);
+  const [isOption4Clicked, setIsOption4Clicked] = useState(false);
 
   async function getQuestion() {
     const data = await guessVerse.bySurah({
@@ -28,15 +36,75 @@ function App() {
     getQuestion();
   }, []);
 
+  console.log(options[0]?.[0].text);
   return (
     <main className="mx-10 mt-5 flex flex-col gap-5">
       <Card title="Sambung Ayat" text={question[0]} />
-      <div className="flex flex-col gap-3">
-        {options[0]?.map(
-          (option: { text: string; value: number }, index: number) => (
-            <Option text={option.text} value={option.value} key={index} />
-          )
-        )}
+      <div className={clsx("flex flex-col gap-3")}>
+        <Option
+          text={options[0]?.[0].text}
+          handleClick={() => {
+            setIsOption1Clicked(true);
+            setIsDisabled(true);
+          }}
+          isDisabled={isDisabled}
+          className={clsx(
+            isOption1Clicked
+              ? options[0]?.[0].value
+                ? "bg-green-500 text-white"
+                : "bg-red-500 text-white"
+              : "",
+            { "bg-green-500 text-white": isDisabled && options[0]?.[0].value }
+          )}
+        />
+        <Option
+          text={options[0]?.[1].text}
+          handleClick={() => {
+            setIsOption2Clicked(true);
+            setIsDisabled(true);
+          }}
+          isDisabled={isDisabled}
+          className={clsx(
+            isOption2Clicked
+              ? options[0]?.[1].value
+                ? "bg-green-500 text-white"
+                : "bg-red-500 text-white"
+              : "",
+            { "bg-green-500 text-white": isDisabled && options[0]?.[1].value }
+          )}
+        />
+        <Option
+          text={options[0]?.[2].text}
+          handleClick={() => {
+            setIsOption3Clicked(true);
+            setIsDisabled(true);
+          }}
+          isDisabled={isDisabled}
+          className={clsx(
+            isOption3Clicked
+              ? options[0]?.[2].value
+                ? "bg-green-500 text-white"
+                : "bg-red-500 text-white"
+              : "",
+            { "bg-green-500 text-white": isDisabled && options[0]?.[2].value }
+          )}
+        />
+        <Option
+          text={options[0]?.[3].text}
+          handleClick={() => {
+            setIsOption4Clicked(true);
+            setIsDisabled(true);
+          }}
+          isDisabled={isDisabled}
+          className={clsx(
+            isOption4Clicked
+              ? options[0]?.[3].value
+                ? "bg-green-500 text-white"
+                : "bg-red-500 text-white"
+              : "",
+            { "bg-green-500 text-white": isDisabled && options[0]?.[3].value }
+          )}
+        />
       </div>
     </main>
   );
