@@ -6,14 +6,13 @@ import clsx from "clsx";
 
 function App() {
   const [question, setQuestion] = useState<string[] | null[]>([]);
+  const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const [options, setOptions] = useState<any[]>([]);
-  // const [icon, setIcon] = useState("");
-  // const [className, setClassName] = useState<string>("");
-  const [isDisabled, setIsDisabled] = useState(false);
-  const [isOption1Clicked, setIsOption1Clicked] = useState(false);
-  const [isOption2Clicked, setIsOption2Clicked] = useState(false);
-  const [isOption3Clicked, setIsOption3Clicked] = useState(false);
-  const [isOption4Clicked, setIsOption4Clicked] = useState(false);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const [isOption1Clicked, setIsOption1Clicked] = useState<boolean>(false);
+  const [isOption2Clicked, setIsOption2Clicked] = useState<boolean>(false);
+  const [isOption3Clicked, setIsOption3Clicked] = useState<boolean>(false);
+  const [isOption4Clicked, setIsOption4Clicked] = useState<boolean>(false);
 
   async function getQuestion() {
     const data = await guessVerse.bySurah({
@@ -36,13 +35,12 @@ function App() {
     getQuestion();
   }, []);
 
-  console.log(options[0]?.[0].text);
   return (
     <main className="mx-10 mt-5 flex flex-col gap-5">
-      <Card title="Sambung Ayat" text={question[0]} />
+      <Card title="Sambung Ayat" text={question[currentQuestion]} />
       <div className={clsx("flex flex-col gap-3")}>
         <Option
-          text={options[0]?.[0].text}
+          text={options[currentQuestion]?.[0].text}
           handleClick={() => {
             setIsOption1Clicked(true);
             setIsDisabled(true);
@@ -50,15 +48,18 @@ function App() {
           isDisabled={isDisabled}
           className={clsx(
             isOption1Clicked
-              ? options[0]?.[0].value
+              ? options[currentQuestion]?.[0].value
                 ? "bg-green-500 text-white"
                 : "bg-red-500 text-white"
               : "",
-            { "bg-green-500 text-white": isDisabled && options[0]?.[0].value }
+            {
+              "bg-green-500 text-white":
+                isDisabled && options[currentQuestion]?.[0].value,
+            }
           )}
         />
         <Option
-          text={options[0]?.[1].text}
+          text={options[currentQuestion]?.[1].text}
           handleClick={() => {
             setIsOption2Clicked(true);
             setIsDisabled(true);
@@ -66,15 +67,18 @@ function App() {
           isDisabled={isDisabled}
           className={clsx(
             isOption2Clicked
-              ? options[0]?.[1].value
+              ? options[currentQuestion]?.[1].value
                 ? "bg-green-500 text-white"
                 : "bg-red-500 text-white"
               : "",
-            { "bg-green-500 text-white": isDisabled && options[0]?.[1].value }
+            {
+              "bg-green-500 text-white":
+                isDisabled && options[currentQuestion]?.[1].value,
+            }
           )}
         />
         <Option
-          text={options[0]?.[2].text}
+          text={options[currentQuestion]?.[2].text}
           handleClick={() => {
             setIsOption3Clicked(true);
             setIsDisabled(true);
@@ -82,15 +86,18 @@ function App() {
           isDisabled={isDisabled}
           className={clsx(
             isOption3Clicked
-              ? options[0]?.[2].value
+              ? options[currentQuestion]?.[2].value
                 ? "bg-green-500 text-white"
                 : "bg-red-500 text-white"
               : "",
-            { "bg-green-500 text-white": isDisabled && options[0]?.[2].value }
+            {
+              "bg-green-500 text-white":
+                isDisabled && options[currentQuestion]?.[2].value,
+            }
           )}
         />
         <Option
-          text={options[0]?.[3].text}
+          text={options[currentQuestion]?.[3].text}
           handleClick={() => {
             setIsOption4Clicked(true);
             setIsDisabled(true);
@@ -98,14 +105,32 @@ function App() {
           isDisabled={isDisabled}
           className={clsx(
             isOption4Clicked
-              ? options[0]?.[3].value
+              ? options[currentQuestion]?.[3].value
                 ? "bg-green-500 text-white"
                 : "bg-red-500 text-white"
               : "",
-            { "bg-green-500 text-white": isDisabled && options[0]?.[3].value }
+            {
+              "bg-green-500 text-white":
+                isDisabled && options[currentQuestion]?.[3].value,
+            }
           )}
         />
       </div>
+      <button
+        className={clsx("bg-black text-white rounded-md py-1", {
+          hidden: !isDisabled,
+        })}
+        onClick={() => {
+          setCurrentQuestion(currentQuestion + 1);
+          setIsDisabled(false);
+          setIsOption1Clicked(false);
+          setIsOption2Clicked(false);
+          setIsOption3Clicked(false);
+          setIsOption4Clicked(false);
+        }}
+      >
+        Next
+      </button>
     </main>
   );
 }

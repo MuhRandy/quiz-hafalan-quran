@@ -1,12 +1,10 @@
 import clsx from "clsx";
-// import { useState } from "react";
 
 type OptionProps = {
   text: string;
   handleClick: any;
   icon?: string;
   className: string;
-  //   value: number;
   isDisabled: boolean;
 };
 
