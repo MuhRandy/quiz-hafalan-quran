@@ -16,7 +16,7 @@ function App() {
 
   async function getQuestion() {
     const data = await guessVerse.bySurah({
-      amount: 3,
+      amount: 10,
       select: [113, 114],
     });
 
@@ -37,8 +37,19 @@ function App() {
 
   return (
     <main className="mx-10 mt-5 flex flex-col gap-5">
-      <Card title="Sambung Ayat" text={question[currentQuestion]} />
-      <div className={clsx("flex flex-col gap-3")}>
+      <Card
+        title="Sambung Ayat"
+        text={
+          currentQuestion <= question.length - 1
+            ? question[currentQuestion]
+            : "Selesai"
+        }
+      />
+      <div
+        className={clsx("flex flex-col gap-3", {
+          hidden: currentQuestion > question.length - 1,
+        })}
+      >
         <Option
           text={options[currentQuestion]?.[0].text}
           handleClick={() => {
@@ -129,7 +140,7 @@ function App() {
           setIsOption4Clicked(false);
         }}
       >
-        Next
+        {currentQuestion < question.length - 1 ? "Next" : "Complete"}
       </button>
     </main>
   );
