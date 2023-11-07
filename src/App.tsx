@@ -1,9 +1,53 @@
-import Quiz from './components/Quiz';
-import Card from './components/Card';
-import { useState } from 'react';
+import Quiz from "./components/Quiz";
+import Card from "./components/Card";
+import { useEffect, useState } from "react";
+import { guessVerse } from "quran-quiz";
 
 function App() {
-  const [amount, setAmount] = useState<number[]>([0, 1]);
+  const [amount, setAmount] = useState<number>(1);
+  const [questions, setQuestions] = useState<string[] | null[]>([]);
+  const [options, setOptions] = useState<any[]>([]);
+  const [currentQuestion, setCurrentQuestion] = useState<number>(0);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const [isOptionClicked, setIsOptionClicked] = useState<boolean[]>([
+    false,
+    false,
+    false,
+    false,
+  ]);
+
+  async function getQuestion(): Promise<void> {
+    const data = await guessVerse.bySurah({
+      amount: Number(amount),
+      select: [113, 114],
+    });
+
+    const arrQuestions: string[] = [];
+    const arrOptions: any[] = [];
+
+    for (let i = 0; i < data.data.length; i++) {
+      arrQuestions.push(data.data[i].question);
+      arrOptions.push(data.data[i].options);
+    }
+    setQuestions(arrQuestions);
+    setOptions(arrOptions);
+  }
+
+  useEffect(() => {
+    getQuestion();
+  }, []);
+
+  const nextHandleClick = () => {
+    setCurrentQuestion(currentQuestion + 1);
+    setIsDisabled(false);
+    setIsOptionClicked([false, false, false, false]);
+  };
+
+  const resetOptionsClicked = (arr: boolean[]) => {
+    setIsOptionClicked(arr);
+    setIsDisabled(true);
+  };
+
   return (
     <main className="mx-10 mt-5 flex flex-col gap-5">
       <Card>
@@ -18,20 +62,34 @@ function App() {
               className="max-w-[35px] p-0 text-center"
               defaultValue={1}
               onChange={(e) => {
-                let newArr = [...amount];
-                console.log(newArr);
-                newArr[1] = Number(e.target.value);
-                console.log(newArr);
-                console.log(amount);
-                setAmount(newArr);
-                console.log(amount);
+                setAmount(Number(e.target.value));
               }}
             />
           </div>
-          <div>{amount}</div>
+          <button
+            onClick={() => {
+              getQuestion();
+              setIsDisabled(false);
+              setIsOptionClicked([false, false, false, false]);
+              setCurrentQuestion(0);
+
+              console.log(amount);
+            }}
+            className="bg-black text-white px-3"
+          >
+            Set
+          </button>
         </Card.Text>
       </Card>
-      <Quiz />
+      <Quiz
+        questions={questions}
+        options={options}
+        nextHandleClick={nextHandleClick}
+        currentQuestion={currentQuestion}
+        isDisabled={isDisabled}
+        isOptionClicked={isOptionClicked}
+        resetOptionsClickedFunction={resetOptionsClicked}
+      />
     </main>
   );
 }
