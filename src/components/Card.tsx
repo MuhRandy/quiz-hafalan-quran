@@ -30,7 +30,7 @@ function Title({ title, className }: TitleProps): JSX.Element {
 }
 
 function Text({ children, className }: TextProps): JSX.Element {
-  return <p className={clsx('mt-5', className)}>{children}</p>;
+  return <div className={clsx('mt-5', className)}>{children}</div>;
 }
 
 Card.Title = Title;
