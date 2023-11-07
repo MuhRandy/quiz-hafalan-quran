@@ -10,6 +10,8 @@ type QuizProps = {
   isDisabled: boolean;
   isOptionClicked: boolean[];
   resetOptionsClickedFunction: any;
+  scoreHandleFunction: any;
+  score: number;
 };
 
 const Quiz = ({
@@ -20,15 +22,23 @@ const Quiz = ({
   isDisabled,
   isOptionClicked,
   resetOptionsClickedFunction,
+  scoreHandleFunction,
+  score,
 }: QuizProps): JSX.Element => {
   return (
     <>
       <Card>
-        <Card.Title title="Sambung Ayat" />
+        <Card.Title
+          title={`Sambung Ayat ${
+            currentQuestion <= questions.length - 1
+              ? currentQuestion + 1 + "/" + questions.length
+              : ""
+          }`}
+        />
         <Card.Text className="text-right text-xl font-quranic">
           {currentQuestion <= questions.length - 1
             ? questions[currentQuestion]
-            : "Selesai"}
+            : `Selesai ${score}/${questions.length}`}
         </Card.Text>
       </Card>
       <div
@@ -44,16 +54,17 @@ const Quiz = ({
                 let newArr: boolean[] = [...isOptionClicked];
                 newArr[index] = Boolean(true);
                 resetOptionsClickedFunction(newArr);
+                scoreHandleFunction(Number(option.value));
               }}
               isDisabled={isDisabled}
               className={clsx(
                 isOptionClicked[index]
                   ? option.value
-                    ? "bg-green-500 text-white"
-                    : "bg-red-500 text-white"
+                    ? "bg-green-500"
+                    : "bg-red-500"
                   : "",
                 {
-                  "bg-green-500 text-white": isDisabled && option.value,
+                  "bg-green-500": isDisabled && option.value,
                 }
               )}
               key={index}
