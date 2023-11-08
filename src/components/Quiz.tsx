@@ -29,16 +29,23 @@ const Quiz = ({
     <>
       <Card>
         <Card.Title
-          title={`Sambung Ayat ${
-            currentQuestion <= questions.length - 1
-              ? currentQuestion + 1 + "/" + questions.length
-              : ""
-          }`}
+          className={clsx({
+            hidden: currentQuestion > questions.length - 1,
+          })}
+          title={`Sambung Ayat ${currentQuestion + 1 + "/" + questions.length}`}
         />
-        <Card.Text className="text-right text-xl font-quranic">
-          {currentQuestion <= questions.length - 1
-            ? questions[currentQuestion]
-            : `Selesai ${score}/${questions.length}`}
+        <Card.Title
+          className={clsx("text-xl", {
+            hidden: currentQuestion <= questions.length - 1,
+          })}
+          title={`Selesai, score anda : ${score}/${questions.length}`}
+        />
+        <Card.Text
+          className={clsx("text-right text-xl font-quranic", {
+            hidden: currentQuestion > questions.length - 1,
+          })}
+        >
+          {questions[currentQuestion]}
         </Card.Text>
       </Card>
       <div
