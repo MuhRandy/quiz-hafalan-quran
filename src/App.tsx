@@ -18,18 +18,9 @@ import {
   Select,
 } from "@chakra-ui/react";
 
-type surah = {
-  englishName: string;
-  englishNameTranslation: string;
-  name: string;
-  number: number;
-  numberOfAyahs: number;
-  revelationType: string;
-};
-
 function App() {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  // const [error, setError] = useState("");
   const [surah, setSurah] = useState<any[] | null[]>([]);
   const [amount, setAmount] = useState<number>(1);
   const [surahNumber, setSurahNumber] = useState<number>(1);
@@ -55,7 +46,7 @@ function App() {
       })
       .catch((error) => {
         setLoading(false);
-        setError(error.message);
+        console.log(error.message);
       });
   };
 
@@ -95,8 +86,6 @@ function App() {
   const scoreHandle = (optionValue: number) => {
     setScore(score + optionValue);
   };
-
-  console.log(surah);
 
   return (
     <ChakraProvider>
