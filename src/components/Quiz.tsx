@@ -66,16 +66,12 @@ const Quiz = ({
                 scoreHandleFunction(Number(option.value));
               }}
               isDisabled={isDisabled}
-              className={clsx(
-                isOptionClicked[index]
-                  ? option.value
-                    ? 'bg-green-500'
-                    : 'bg-red-500'
-                  : '',
-                {
-                  'bg-green-500': isDisabled && option.value,
-                }
-              )}
+              colorScheme={clsx({
+                green:
+                  (isDisabled && option.value) ||
+                  (isOptionClicked[index] && option.value),
+                red: isOptionClicked[index] && !option.value,
+              })}
               key={index}
             />
           )
