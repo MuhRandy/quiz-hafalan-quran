@@ -1,6 +1,6 @@
-import Card from "./Card";
-import Option from "./Option";
-import clsx from "clsx";
+import { Card, Text } from '@chakra-ui/react';
+import Option from './Option';
+import clsx from 'clsx';
 
 type QuizProps = {
   questions: string[] | null[];
@@ -27,29 +27,31 @@ const Quiz = ({
 }: QuizProps): JSX.Element => {
   return (
     <>
-      <Card>
-        <Card.Title
-          className={clsx({
+      <Card className="h-fit w-full shadow-md rounded-md p-2">
+        <Text
+          className={clsx('text-center font-bold', {
             hidden: currentQuestion > questions.length - 1,
           })}
-          title={`Sambung Ayat ${currentQuestion + 1 + "/" + questions.length}`}
-        />
-        <Card.Title
-          className={clsx("text-xl", {
+        >
+          {`Sambung Ayat ${currentQuestion + 1 + '/' + questions.length}`}
+        </Text>
+        <Text
+          className={clsx('text-center font-bold', 'text-xl', {
             hidden: currentQuestion <= questions.length - 1,
           })}
-          title={`Selesai, score anda : ${score}/${questions.length}`}
-        />
-        <Card.Text
-          className={clsx("text-right text-xl font-quranic", {
+        >
+          {`Selesai, score anda : ${score}/${questions.length}`}
+        </Text>
+        <Text
+          className={clsx('mt-5', 'text-right text-xl font-quranic', {
             hidden: currentQuestion > questions.length - 1,
           })}
         >
           {questions[currentQuestion]}
-        </Card.Text>
+        </Text>
       </Card>
       <div
-        className={clsx("flex flex-col gap-3", {
+        className={clsx('flex flex-col gap-3', {
           hidden: currentQuestion > questions.length - 1,
         })}
       >
@@ -67,11 +69,11 @@ const Quiz = ({
               className={clsx(
                 isOptionClicked[index]
                   ? option.value
-                    ? "bg-green-500"
-                    : "bg-red-500"
-                  : "",
+                    ? 'bg-green-500'
+                    : 'bg-red-500'
+                  : '',
                 {
-                  "bg-green-500": isDisabled && option.value,
+                  'bg-green-500': isDisabled && option.value,
                 }
               )}
               key={index}
@@ -80,12 +82,12 @@ const Quiz = ({
         )}
       </div>
       <button
-        className={clsx("bg-black text-white rounded-md py-1", {
+        className={clsx('bg-black text-white rounded-md py-1', {
           hidden: !isDisabled,
         })}
         onClick={nextHandleClick}
       >
-        {currentQuestion < questions.length - 1 ? "Next" : "Complete"}
+        {currentQuestion < questions.length - 1 ? 'Next' : 'Complete'}
       </button>
     </>
   );
