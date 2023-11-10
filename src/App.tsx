@@ -1,7 +1,7 @@
-import Quiz from './components/Quiz';
-import { useEffect, useState } from 'react';
-import { guessVerse } from 'quran-quiz';
-import axios from 'axios';
+import Quiz from "./components/Quiz";
+import { useEffect, useState } from "react";
+import { guessVerse } from "quran-quiz";
+import axios from "axios";
 import {
   Button,
   Card,
@@ -16,7 +16,7 @@ import {
   NumberInputStepper,
   Text,
   Select,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -37,7 +37,7 @@ function App() {
   ]);
 
   const getSurahData = () => {
-    const API_URL = 'http://api.alquran.cloud/v1/surah';
+    const API_URL = "http://api.alquran.cloud/v1/surah";
     axios
       .get(API_URL)
       .then(({ data }) => {
@@ -89,18 +89,20 @@ function App() {
 
   return (
     <ChakraProvider>
-      <main className="px-10 min-w-full mt-5 flex flex-col gap-5 mb-5">
-        <Card>
+      <main className="min-w-full mt-5 flex flex-col gap-5 mb-5">
+        <Card mx={{ base: "40px", sm: "auto" }} w={{ sm: "xl" }}>
           <CardHeader>
-            <Heading size={'md'} textAlign={'center'}>
-              Selamat Datang di Website Hafalan Qur'an Sederhana
+            <Heading size={"md"} textAlign={"center"} fontSize={{ sm: "2xl" }}>
+              Selamat Datang di Website Quiz Hafalan Qur'an Sederhana
             </Heading>
           </CardHeader>
           <CardBody>
             <Text mb="8px" className="font-quranic text-center text-3xl">
               {surah[surahNumber - 1]?.name}
             </Text>
-            <Text mb="8px">Jumlah Soal: {amount}</Text>
+            <Text mb="8px" fontSize={{ sm: "lg" }}>
+              Jumlah Soal: {amount}
+            </Text>
             <NumberInput
               size="sm"
               maxW={20}
@@ -110,7 +112,7 @@ function App() {
               onChange={(value) => {
                 setAmount(Number(value));
               }}
-              mb={'8px'}
+              mb={"8px"}
             >
               <NumberInputField />
               <NumberInputStepper>
@@ -120,9 +122,11 @@ function App() {
             </NumberInput>
             <Select
               placeholder="Pilih Surah"
-              mb={'8px'}
+              mb={"8px"}
               className="font-quranic"
               onChange={(e) => setSurahNumber(Number(e.target.value))}
+              fontSize={{ sm: "2xl" }}
+              h={"fit-content"}
             >
               {surah?.map((surah, index) => (
                 <option
@@ -136,8 +140,8 @@ function App() {
             </Select>
             <Button
               colorScheme="teal"
-              size={'sm'}
-              width={'100px'}
+              size={"sm"}
+              width={"100px"}
               onClick={() => {
                 getQuestion();
                 setIsDisabled(false);
@@ -148,6 +152,7 @@ function App() {
                 console.log(amount);
               }}
               isLoading={loading}
+              fontSize={{ sm: "lg" }}
             >
               Set
             </Button>

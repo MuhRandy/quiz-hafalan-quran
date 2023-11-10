@@ -1,6 +1,6 @@
-import { Card, Text } from '@chakra-ui/react';
-import Option from './Option';
-import clsx from 'clsx';
+import { Button, Card, Text } from "@chakra-ui/react";
+import Option from "./Option";
+import clsx from "clsx";
 
 type QuizProps = {
   questions: string[] | null[];
@@ -25,33 +25,50 @@ const Quiz = ({
   scoreHandleFunction,
   score,
 }: QuizProps): JSX.Element => {
+  const optionHandleClick = (option: any, index: number) => {
+    let newArr: boolean[] = [...isOptionClicked];
+    newArr[index] = Boolean(true);
+    resetOptionsClickedFunction(newArr);
+    scoreHandleFunction(Number(option.value));
+  };
+
+  const fontSize = { sm: "lg" };
+
   return (
     <>
-      <Card className="h-fit w-full shadow-md rounded-md p-2">
+      <Card mx={{ base: "40px", sm: "auto" }} p={"8px"} w={{ sm: "xl" }}>
         <Text
-          className={clsx('text-center font-bold', {
+          className={clsx("text-center font-bold", {
             hidden: currentQuestion > questions.length - 1,
           })}
+          fontSize={fontSize}
         >
-          {`Sambung Ayat ${currentQuestion + 1 + '/' + questions.length}`}
+          {`Sambung Ayat ${currentQuestion + 1 + "/" + questions.length}`}
         </Text>
         <Text
-          className={clsx('text-center font-bold', 'text-xl', {
+          className={clsx("text-center font-bold", "text-xl", {
             hidden: currentQuestion <= questions.length - 1,
           })}
+          fontSize={fontSize}
         >
           {`Selesai, score anda : ${score}/${questions.length}`}
         </Text>
+        {/* Questions */}
         <Text
-          className={clsx('mt-5', 'text-right text-xl font-quranic', {
+          mt={"20px"}
+          textAlign={"right"}
+          fontSize={{ base: "xl", sm: "2xl" }}
+          className={clsx("font-quranic", {
             hidden: currentQuestion > questions.length - 1,
           })}
         >
           {questions[currentQuestion]}
         </Text>
+        {/*  */}
       </Card>
+      {/* Options */}
       <div
-        className={clsx('flex flex-col gap-3', {
+        className={clsx("flex flex-col gap-3 mx-10 min-[480px]:mx-0", {
           hidden: currentQuestion > questions.length - 1,
         })}
       >
@@ -59,12 +76,7 @@ const Quiz = ({
           (option: { text: string; value: number }, index: number) => (
             <Option
               text={option.text}
-              handleClick={() => {
-                let newArr: boolean[] = [...isOptionClicked];
-                newArr[index] = Boolean(true);
-                resetOptionsClickedFunction(newArr);
-                scoreHandleFunction(Number(option.value));
-              }}
+              handleClick={() => optionHandleClick(option, index)}
               isDisabled={isDisabled}
               colorScheme={clsx({
                 green:
@@ -77,14 +89,24 @@ const Quiz = ({
           )
         )}
       </div>
-      <button
-        className={clsx('bg-black text-white rounded-md py-1', {
-          hidden: !isDisabled,
-        })}
+      {/*  */}
+      <Button
+        variant={"solid"}
+        backgroundColor={"black"}
+        textColor={"white"}
         onClick={nextHandleClick}
+        hidden={!isDisabled}
+        _hover={{
+          background: "white",
+          outlineWidth: 1,
+          outlineColor: "black",
+          textColor: "black",
+        }}
+        w={"fit-content"}
+        m={"auto"}
       >
-        {currentQuestion < questions.length - 1 ? 'Next' : 'Complete'}
-      </button>
+        {currentQuestion < questions.length - 1 ? "Selanjutnya" : "Selesai"}
+      </Button>
     </>
   );
 };

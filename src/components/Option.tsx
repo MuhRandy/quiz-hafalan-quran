@@ -1,5 +1,4 @@
-import { Button, Text } from '@chakra-ui/react';
-import clsx from 'clsx';
+import { Button, Text } from "@chakra-ui/react";
 
 type OptionProps = {
   text: string;
@@ -18,17 +17,23 @@ const Option = ({
 }: OptionProps) => {
   return (
     <Button
-      variant={'outline'}
-      className={clsx('text-right p-2', className)}
+      variant={"outline"}
+      p={"2"}
+      className={className}
       onClick={handleClick}
       isDisabled={isDisabled}
-      _hover={{ colorScheme: 'none' }}
-      style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}
-      height={'fit-content'}
-      textAlign={'right'}
+      _hover={{}}
+      _disabled={{ cursor: "not-allowed" }}
+      style={{ whiteSpace: "normal", wordWrap: "break-word" }}
+      height={"fit-content"}
+      textAlign={"right"}
       colorScheme={colorScheme}
+      w={{ sm: "xl" }}
+      mx={{ base: "0", sm: "auto" }}
     >
-      <Text className="font-quranic text-lg">{text}</Text>
+      <Text className="font-quranic" fontSize={{ base: "lg", sm: "xl" }}>
+        {text}
+      </Text>
     </Button>
   );
 };
