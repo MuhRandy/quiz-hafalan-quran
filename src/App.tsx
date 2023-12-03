@@ -1,22 +1,57 @@
 import Quiz from "./components/Quiz";
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { guessVerse } from "quran-quiz";
 import axios from "axios";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  ChakraProvider,
-  Heading,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Text,
-  Select,
-} from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
+import QuizOpening from "./components/QuizOpening";
+
+type AppContent = {
+  surah: any[] | null[];
+  amount: number;
+  surahNumber: number;
+  questions: string[] | null[];
+  options: any[];
+  score: number;
+  currentQuestion: number;
+  isDisabled: boolean;
+  isOptionClicked: boolean[];
+  loading: boolean;
+  setSurah: (surah: any[]) => void;
+  setAmount: (amount: number) => void;
+  setSurahNumber: (surahNumber: number) => void;
+  setQuestions: (questions: string[]) => void;
+  setOptions: (options: any[]) => void;
+  setScore: (score: number) => void;
+  setCurrentQuestion: (currentQuestion: number) => void;
+  setIsDisabled: (isDisabled: boolean) => void;
+  setIsOptionClicked: (isOptionClicked: boolean[]) => void;
+  setLoading: (loading: boolean) => void;
+};
+
+const AppContext = createContext<AppContent>({
+  surah: [],
+  amount: 1,
+  surahNumber: 1,
+  questions: [],
+  options: [],
+  score: 0,
+  currentQuestion: 0,
+  isDisabled: false,
+  isOptionClicked: [false, false, false, false],
+  loading: true,
+  setSurah: () => {},
+  setAmount: () => {},
+  setSurahNumber: () => {},
+  setQuestions: () => {},
+  setOptions: () => {},
+  setScore: () => {},
+  setCurrentQuestion: () => {},
+  setIsDisabled: () => {},
+  setIsOptionClicked: () => {},
+  setLoading: () => {},
+});
+
+export const useAppContext = () => useContext(AppContext);
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -50,7 +85,7 @@ function App() {
       });
   };
 
-  async function getQuestion(): Promise<void> {
+  const getQuestion = async (): Promise<void> => {
     const data = await guessVerse.bySurah({
       amount: Number(amount),
       select: [surahNumber],
@@ -65,111 +100,44 @@ function App() {
     }
     setQuestions(arrQuestions);
     setOptions(arrOptions);
-  }
+  };
 
   useEffect(() => {
     getQuestion();
     getSurahData();
   }, []);
 
-  const nextHandleClick = () => {
-    setCurrentQuestion(currentQuestion + 1);
-    setIsDisabled(false);
-    setIsOptionClicked([false, false, false, false]);
-  };
-
-  const resetOptionsClicked = (arr: boolean[]) => {
-    setIsOptionClicked(arr);
-    setIsDisabled(true);
-  };
-
-  const scoreHandle = (optionValue: number) => {
-    setScore(score + optionValue);
-  };
-
   return (
     <ChakraProvider>
-      <main className="min-w-full mt-5 flex flex-col gap-5 mb-5">
-        <Card mx={{ base: "40px", sm: "auto" }} w={{ sm: "xl" }}>
-          <CardHeader>
-            <Heading size={"md"} textAlign={"center"} fontSize={{ sm: "2xl" }}>
-              Selamat Datang di Website Quiz Hafalan Qur'an Sederhana
-            </Heading>
-          </CardHeader>
-          <CardBody>
-            <Text mb="8px" className="font-quranic text-center text-3xl">
-              {surah[surahNumber - 1]?.name}
-            </Text>
-            <Text mb="8px" fontSize={{ sm: "lg" }}>
-              Jumlah Soal: {amount}
-            </Text>
-            <NumberInput
-              size="sm"
-              maxW={20}
-              defaultValue={1}
-              min={1}
-              allowMouseWheel
-              onChange={(value) => {
-                setAmount(Number(value));
-              }}
-              mb={"8px"}
-            >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-            <Select
-              placeholder="Pilih Surah"
-              mb={"8px"}
-              className="font-quranic"
-              onChange={(e) => setSurahNumber(Number(e.target.value))}
-              fontSize={{ sm: "2xl" }}
-              h={"fit-content"}
-            >
-              {surah?.map((surah, index) => (
-                <option
-                  className="font-quranic"
-                  value={surah.number}
-                  key={index}
-                >
-                  {surah.name}
-                </option>
-              ))}
-            </Select>
-            <Button
-              colorScheme="teal"
-              size={"sm"}
-              width={"100px"}
-              onClick={() => {
-                getQuestion();
-                setIsDisabled(false);
-                setIsOptionClicked([false, false, false, false]);
-                setCurrentQuestion(0);
-                setScore(0);
-
-                console.log(amount);
-              }}
-              isLoading={loading}
-              fontSize={{ sm: "lg" }}
-            >
-              Set
-            </Button>
-          </CardBody>
-        </Card>
-        <Quiz
-          questions={questions}
-          options={options}
-          nextHandleClick={nextHandleClick}
-          currentQuestion={currentQuestion}
-          isDisabled={isDisabled}
-          isOptionClicked={isOptionClicked}
-          resetOptionsClickedFunction={resetOptionsClicked}
-          scoreHandleFunction={scoreHandle}
-          score={score}
-        />
-      </main>
+      <AppContext.Provider
+        value={{
+          surah,
+          amount,
+          surahNumber,
+          questions,
+          options,
+          score,
+          currentQuestion,
+          isDisabled,
+          isOptionClicked,
+          loading,
+          setSurah,
+          setAmount,
+          setSurahNumber,
+          setQuestions,
+          setOptions,
+          setScore,
+          setCurrentQuestion,
+          setIsDisabled,
+          setIsOptionClicked,
+          setLoading,
+        }}
+      >
+        <main className="min-w-full mt-5 flex flex-col gap-5 mb-5">
+          <QuizOpening getQuestion={getQuestion} />
+          <Quiz />
+        </main>
+      </AppContext.Provider>
     </ChakraProvider>
   );
 }

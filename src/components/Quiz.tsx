@@ -1,35 +1,42 @@
 import { Button, Card, Text } from "@chakra-ui/react";
 import Option from "./Option";
 import clsx from "clsx";
+import { useAppContext } from "../App";
 
-type QuizProps = {
-  questions: string[] | null[];
-  options: any[];
-  nextHandleClick: any;
-  currentQuestion: number;
-  isDisabled: boolean;
-  isOptionClicked: boolean[];
-  resetOptionsClickedFunction: any;
-  scoreHandleFunction: any;
-  score: number;
-};
+const Quiz = (): JSX.Element => {
+  const {
+    questions,
+    options,
+    currentQuestion,
+    isDisabled,
+    isOptionClicked,
+    score,
+    setCurrentQuestion,
+    setIsDisabled,
+    setIsOptionClicked,
+    setScore,
+  } = useAppContext();
 
-const Quiz = ({
-  questions,
-  options,
-  nextHandleClick,
-  currentQuestion,
-  isDisabled,
-  isOptionClicked,
-  resetOptionsClickedFunction,
-  scoreHandleFunction,
-  score,
-}: QuizProps): JSX.Element => {
+  const nextHandleClick = () => {
+    setCurrentQuestion(currentQuestion + 1);
+    setIsDisabled(false);
+    setIsOptionClicked([false, false, false, false]);
+  };
+
+  const resetOptionsClicked = (arr: boolean[]) => {
+    setIsOptionClicked(arr);
+    setIsDisabled(true);
+  };
+
+  const scoreHandle = (optionValue: number) => {
+    setScore(score + optionValue);
+  };
+
   const optionHandleClick = (option: any, index: number) => {
     let newArr: boolean[] = [...isOptionClicked];
     newArr[index] = Boolean(true);
-    resetOptionsClickedFunction(newArr);
-    scoreHandleFunction(Number(option.value));
+    resetOptionsClicked(newArr);
+    scoreHandle(Number(option.value));
   };
 
   const fontSize = { sm: "lg" };
